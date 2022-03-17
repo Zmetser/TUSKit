@@ -95,7 +95,7 @@ final class TUSAPI {
         func makeMetadataHeaders() -> [String: String] {
             let fileName = metaData.filePath.lastPathComponent
             
-            var metaDataHeaders = metaData.customHeaders ?? [:]
+            var metaDataHeaders: [String: String] = [:]
             if !fileName.isEmpty && fileName != "/" { // A filename can be invalid, e.g. "/"
                 metaDataHeaders["filename"] = fileName
             }
@@ -124,10 +124,7 @@ final class TUSAPI {
         var headers = ["Upload-Extension": "creation",
                        "Upload-Length": String(metaData.size)]
         
-        let defaultHeaders = makeMetadataHeaders()
-        let allMetaDataHeaders = defaultHeaders.merging(metaData.customHeaders ?? [:]) { _, rhs in
-            rhs
-        }
+        let allMetaDataHeaders = makeMetadataHeaders()
         
         let encoded = encode(headers: allMetaDataHeaders)
         
@@ -135,7 +132,11 @@ final class TUSAPI {
             headers["Upload-Metadata"] = encodedMetadata
         }
         
-        return makeRequest(url: metaData.uploadURL, method: .post, headers: headers)
+        let headersWithCustom = headers.merging(metaData.customHeaders ?? [:]) { _, new in
+            new
+        }
+        
+        return makeRequest(url: metaData.uploadURL, method: .post, headers: headersWithCustom)
     }
     
     /// Uploads data
