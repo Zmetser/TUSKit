@@ -101,7 +101,7 @@ final class TUSAPITests: XCTestCase {
         let range = offset..<data.count
         let uploadExpectation = expectation(description: "Call api.upload()")
     
-        api.upload(data: Data(), range: range, location: uploadURL) { _ in
+        api.upload(data: Data(), range: range, location: uploadURL, metaData: nil) { _ in
             uploadExpectation.fulfill()
         }
         

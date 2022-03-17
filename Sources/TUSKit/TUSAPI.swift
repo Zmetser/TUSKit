@@ -149,7 +149,7 @@ final class TUSAPI {
     ///   - location: The location of where to upload to.
     ///   - completion: Completionhandler for when the upload is finished.
     @discardableResult
-    func upload(data: Data, range: Range<Int>?, location: URL, completion: @escaping (Result<Int, TUSAPIError>) -> Void) -> URLSessionUploadTask {
+    func upload(data: Data, range: Range<Int>?, location: URL, metaData: UploadMetadata?, completion: @escaping (Result<Int, TUSAPIError>) -> Void) -> URLSessionUploadTask {
         let offset: Int
         let length: Int
         if let range = range {
@@ -164,10 +164,14 @@ final class TUSAPI {
         let headers = [
             "Content-Type": "application/offset+octet-stream",
             "Upload-Offset": String(offset),
-            "Content-Length": String(length)
+            "Content-Length": String(length),
         ]
         
-        let request = makeRequest(url: location, method: .patch, headers: headers)
+        let headersWithCustom = headers.merging(metaData?.customHeaders ?? [:]) { _, new in
+            new
+        }
+        
+        let request = makeRequest(url: location, method: .patch, headers: headersWithCustom)
         
         let task = session.uploadTask(request: request, data: data) { result in
             processResult(completion: completion) {
