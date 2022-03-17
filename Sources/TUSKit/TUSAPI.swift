@@ -125,7 +125,7 @@ final class TUSAPI {
                        "Upload-Length": String(metaData.size)]
         
         let allMetaDataHeaders = makeMetadataHeaders()
-        let allMetaDataHeadersWithContext = allMetaDataHeaders.merge(metaData.context) { _, new in
+        let allMetaDataHeadersWithContext = allMetaDataHeaders.merge(metaData.context ?? [:]) { _, new in
             new
         }
         
