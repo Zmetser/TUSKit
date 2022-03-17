@@ -124,7 +124,10 @@ final class TUSAPI {
         var headers = ["Upload-Extension": "creation",
                        "Upload-Length": String(metaData.size)]
         
-        let allMetaDataHeaders = makeMetadataHeaders()
+        let defaultHeaders = makeMetadataHeaders()
+        let allMetaDataHeaders = defaultHeaders.merging(metaData.context ?? [:]) { _, new in
+            new
+        }
         
         let encoded = encode(headers: allMetaDataHeaders)
         
