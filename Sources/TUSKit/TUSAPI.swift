@@ -124,8 +124,8 @@ final class TUSAPI {
         var headers = ["Upload-Extension": "creation",
                        "Upload-Length": String(metaData.size)]
         
-        let allMetaDataHeaders = makeMetadataHeaders()
-        let allMetaDataHeadersWithContext = allMetaDataHeaders.merge(metaData.context ?? [:]) { _, new in
+        let defaultHeaders = makeMetadataHeaders()
+        let allMetaDataHeaders = defaultHeaders.merging(metaData.context ?? [:]) { _, new in
             new
         }
         
